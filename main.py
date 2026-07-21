@@ -38,11 +38,13 @@ def get_health():
 # gets all task
 @app.get("/tasks")
 def get_all_tasks():  
+    """Fetch and return the complete list of tasks"""
     return task_db
-
+    
 # gets task by its id
 @app.get("/tasks/{task_id}")
 def get_task(task_id: int):
+    """Fetch the task by its id"""
     for task in task_db:
         if task["id"] == task_id:
             return task
@@ -51,7 +53,7 @@ def get_task(task_id: int):
 # POST A NEW TASK
 @app.post("/tasks", status_code=status.HTTP_201_CREATED)
 def create_task(task : TaskCreate):
-    
+    """Creates a new task"""
     # In case the user enters a blank input
     if not task.title.strip():
         raise HTTPException(
@@ -73,6 +75,7 @@ def create_task(task : TaskCreate):
 # For deleting tasks
 @app.delete("/tasks/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_task(task_id: int):
+    """Deletes a task using ID"""
     # Search for the task by its ID
     for index, task in enumerate(task_db):
         if task["id"] == task_id:
@@ -88,6 +91,7 @@ def delete_task(task_id: int):
 # For updating tasks
 @app.put("/tasks/{task_id}", response_model=TaskResponse)
 def update_task(task_id: int, new: _TaskUpdate):
+    """Updates the task title or bool"""
     for task in task_db:
         if task["id"] == task_id:
             # Validate title if supplied
