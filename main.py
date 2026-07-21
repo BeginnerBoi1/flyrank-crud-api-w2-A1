@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, status, Response
 from pydantic import BaseModel
 from typing import Optional
 
@@ -49,7 +49,7 @@ def get_task(task_id: int):
     raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
 
 # POST A NEW TASK
-@app.post("/tasks")
+@app.post("/tasks", status_code=status.HTTP_201_CREATED)
 def create_task(task : TaskCreate):
     
     # In case the user enters a blank input
@@ -77,7 +77,7 @@ def delete_task(task_id: int):
     for index, task in enumerate(task_db):
         if task["id"] == task_id:
             task_db.pop(index)  # Remove task
-            return 
+            return Response(status_code=status.HTTP_204_NO_CONTENT)
             
     # Raise a 404 error if the task id does not exist
     raise HTTPException(
